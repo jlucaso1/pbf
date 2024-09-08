@@ -257,7 +257,7 @@ function writeEnum(ctx, {legacy, isTypeScript}) {
 function compileDest(ctx, isTypeScript) {
     const props = new Set();
     for (const field of ctx._proto.fields) {
-        const {name, oneof, repeated} = field;
+        const {name, repeated} = field;
         const defaultValue = JSON.stringify(ctx._defaults[name]);
         const isArray = repeated || isPacked(field);
         const typeScriptType = isTypeScript ?
@@ -267,7 +267,6 @@ function compileDest(ctx, isTypeScript) {
             getTypeAssertion(defaultValue, typeScriptType, isArray, isTypeScript) :
             '';
         props.add(`${name}: ${isArray ? '[]' : defaultValue}${typeAssertion}`);
-        if (oneof) props.add(`${oneof}: undefined`);
     }
     return `{${[...props].join(', ')}}`;
 }
